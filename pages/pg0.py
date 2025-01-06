@@ -105,36 +105,4 @@ layout = [
 ]
 
 
-@callback(Output("url", "pathname"), Input("demo-selection", "value"))
-def update_url(name):
-    return "/deck-explorer/" + name
 
-@callback(
-    [
-        Output("deck-card", "children"),
-        Output("description", "children"),
-        Output("source-code", "children"),
-    ],
-    Input("url", "pathname"),
-)
-def update_demo(pathname):
-    if pathname in ["/deck-explorer/", None, "/"]:
-        return dash.no_update
-
-    name = pathname.split("/")[-1]
-
-    module = deck_modules[name]
-    deck_component = module.app.layout
-    desc = module.__doc__
-#    code = f"```\n{inspect.getsource(module)}\n```"
-    code = "Parameter Setting Coming soon"
-
-    end = dedent(
-        
-        f"""
-    -----
-    
-    Application to show, simulate & optimize CO2 pollution from buildings in Switzerland.
-    """)
-
-    return deck_component, desc+end, code

@@ -1,0 +1,22 @@
+/* CSS used here will be applied after bootstrap.css */
+body {
+  background: rgb(0, 0, 0);
+}
+.nav-pills a {
+    color: "red"
+}
+
+.nav-pills a:hover {
+    color: #560000;
+    border-radius: 0px;
+}
+
+.nav-pills .active a:hover {
+    color: #f5eaea;
+    border-radius: 0px;
+}
+.nav>li>a:hover, 
+.nav>li>a:focus {
+    color: #140056;
+    border-radius: 0px;
+}

@@ -10,8 +10,8 @@ COPY . /app
 # Installiere alle benötigten Pakete aus der requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Mache Port 8000 verfügbar für die Welt außerhalb dieses Containers
-EXPOSE 8000
+# Mache Port 5000 verfügbar für die Welt außerhalb dieses Containers
+EXPOSE 5000
 
 # Führe app.py beim Start des Containers aus
 CMD ["python", "app.py"]

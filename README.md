@@ -1,2 +1,0 @@
-# RIS
-Regulatory Information System

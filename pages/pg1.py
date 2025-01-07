@@ -4,97 +4,70 @@ import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
 
-# To create meta tag for each page, define the title, image, and description.
-
 dash.register_page(__name__, name='BZO Kantone')
 
-""" CODE VON RIS """
+# Pfad zur CSV-Datei
+file_path = 'results.csv'
 
-df = pd.read_csv('Results_Document-Alerting-Master_01_E03.csv', delimiter=';')
+# Daten einlesen, dabei schlechte Zeilen überspringen und Spaltennamen bereinigen
+data = pd.read_csv(file_path, delimiter=';', on_bad_lines='skip')
+data.columns = [col.strip() for col in data.columns]  # Entferne Leerzeichen von Spaltennamen
 
 # Definition der Variablen und ihrer Labels
 variables = {
-    'downloadedPdfDocumentValid': ('Valid', 'Invalid'),
-    'Link_Dok_Present': ('Present', 'Not Present'),
-    'MunicipalityExists': ('Exists', 'Does Not Exist'),
-    'LinkValid': ('Valid', 'Invalid'),
-    'MetaDataDateEqual': ('Equal', 'Not Equal'),
-    'MetaDataOriginal': ('Original', 'Modified'),
-    'MetaDataDownloadedFile': ('Matches', 'Does Not Match'),
-    'HashEqual': ('Equal', 'Not Equal'),
-    'CrawledLinkSameAsRISLink': ('Same', 'Different')
+    'DOWNLOADED_PDF_VALID': ('Valid', 'Invalid'),
+    'LINKDOC_PRESENT': ('Present', 'Not Present'),
+    'MUNICIPALITY_EXISTS': ('Exists', 'Does Not Exist'),
+    'LINK_VALID': ('Valid', 'Invalid'),
+    'METADATA_EQUAL': ('Equal', 'Not Equal'),
+    'METADATA_ORIGINAL': ('Original', 'Modified'),
+    'METADATA_DOWNLOADEDFILE': ('Matches', 'Does Not Match'),
+    'HASH_EQUAL': ('Equal', 'Not Equal'),
+    'CRAWLED_LINK_SAME': ('Same', 'Different')
 }
 
 # Farbschema für die Variablen definieren
 color_scheme = {
-    'downloadedPdfDocumentValid': ['green', 'red', 'grey'],
-    'Link_Dok_Present': ['green', 'red', 'grey'],
-    'MunicipalityExists': ['green', 'red', 'grey'],
-    'LinkValid': ['red', 'green', 'grey'],
-    'MetaDataDateEqual': ['red', 'green', 'grey'],
-    'MetaDataOriginal': ['green', 'red', 'grey'],
-    'MetaDataDownloadedFile': ['red', 'green', 'grey'],
-    'HashEqual': ['red', 'green', 'grey'],
-    'CrawledLinkSameAsRISLink': ['red', 'green', 'grey']
-}
-
-# Erklärungstexte für jede Grafik
-explanation_texts = {
-    'downloadedPdfDocumentValid': 'Dieser Parameter zeigt an, ob die heruntergeladenen BZO gültig sind oder nicht.',
-    'Link_Dok_Present': 'Dieser Parameter zeigt an, ob der Link in der RIS-Liste zu einer BZO aktuell ist oder nicht.',
-    'MunicipalityExists': 'Dieser Parameter zeigt an ob eine Gemeinde aus der RIS-Liste existiert .',
-    'LinkValid': 'Dieser Parameter zeigt an, ob der Link aus der RIS-Liste noch gültig ist.',
-    'MetaDataDateEqual': 'Dieser Parameter zeigt an, ob die Metadaten aus der RIS-Liste übereinstmmer mit den aktuellen Metadaten.',
-    'MetaDataOriginal': 'Dieser Parameter zeigt an wie die originalen Metadaten sind.',
-    'MetaDataDownloadedFile': 'Dieser Parameter zeigt an, ob die Meta-Daten der heruntergeladenen BZO übereinstimmen oder nicht.',
-    'HashEqual': 'Dieser Parameter zeigt an, ob die Hash-Werte gleich sind oder nicht.',
-    'CrawledLinkSameAsRISLink': 'Dieser Parameter zeigt an, ob der gecrawlte Link mit dem Link aus dem RIS-Dokument übereinstimmt oder nicht.'
+    'DOWNLOADED_PDF_VALID': ['green', 'red', 'grey'],
+    'LINKDOC_PRESENT': ['green', 'red', 'grey'],
+    'MUNICIPALITY_EXISTS': ['green', 'red', 'grey'],
+    'LINK_VALID': ['red', 'green', 'grey'],
+    'METADATA_EQUAL': ['red', 'green', 'grey'],
+    'METADATA_ORIGINAL': ['green', 'red', 'grey'],
+    'METADATA_DOWNLOADEDFILE': ['red', 'green', 'grey'],
+    'HASH_EQUAL': ['red', 'green', 'grey'],
+    'CRAWLED_LINK_SAME': ['red', 'green', 'grey']
 }
 
 # Umwandlung und Aggregation der Daten
 data_frames = {}
 for var, labels in variables.items():
-    df[var] = df[var].fillna('Data Not Available')
-    df[var] = df[var].replace({'True': labels[0], 'False': labels[1], 'None': 'Data Not Available'})
-    grouped = df.groupby(['GDEKT', var]).size()
+    data[var] = data[var].fillna('Data Not Available').replace({'True': labels[0], 'False': labels[1]})
+    grouped = data.groupby(['GDEKT', var]).size()
     unstacked = grouped.unstack(fill_value=0)
-    unstacked = unstacked[[labels[0], labels[1]]] if labels[0] in unstacked.columns and labels[1] in unstacked.columns else unstacked
     data_frames[var] = unstacked
 
-    layout = html.Div([
+# Layout der App
+layout = html.Div([
     html.H1("Quality Check BZO-Data", style={'font-family': 'Verdana, sans-serif', 'font-size': '24px'}),
     dcc.Dropdown(
         id='kanton-dropdown',
-        options=[{'label': kanton, 'value': kanton} for kanton in df['GDEKT'].unique()],
+        options=[{'label': kanton, 'value': kanton} for kanton in data['GDEKT'].unique()],
         multi=True,
-        style={'color': 'black'},  # Setzt die Textfarbe des ausgewählten Eintrags
         placeholder='Wähle einen oder mehrere Kantone',
-        value=[]
+        style={'color': 'black'}
     ),
     html.Br(),
     html.Div([
         html.Div([
             dcc.Graph(id=f'graph-{var}', style={'width': '70%'}),
             html.Div([
-                html.P(explanation_texts[var])  # Individuelle Texte für jede Textbox
+                html.P(variables[var][0]),  # Anzeige der Label-Texte für jede Graph
             ], style={'width': '30%', 'padding': '10px', 'border': 'none', 'margin-left': '20px'})
         ], style={'display': 'flex', 'align-items': 'flex-start', 'justify-content': 'space-between', 'margin-bottom': '20px'})
         for var in variables
     ])
 ])
-""" END CODE VON RIS """
-
-# page 1 data
-df = px.data.gapminder()
-
-
-df = pd.read_csv('Results_Document-Alerting-Master_01_E03.csv', delimiter=';')
-# print(df)
-
-@callback(
-    Output('line-fig', 'figure'),
-    Input('cont-choice', 'value')
-)
 
 @callback(
     [Output(f'graph-{var}', 'figure') for var in variables],
@@ -114,12 +87,8 @@ def update_graphs(selected_kantone):
             template='plotly_white'
         )
         fig.update_layout(
-            legend=dict(
-                font=dict(
-                    size=10  # Reducing font size of the legend
-                )
-            ),
-            margin=dict(l=20, r=20, t=40, b=20)  # Adjusting margins to use space more effectively
+            legend=dict(font=dict(size=10)),
+            margin=dict(l=20, r=20, t=40, b=20)
         )
         figures.append(fig)
     return figures

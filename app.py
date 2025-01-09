@@ -1,9 +1,11 @@
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
+import logging
+
 
 def Header(name, app):
-    title = html.H1(name, style={"margin-top": 15})
+    title = html.H1(name, style={"margin-top": 30, 'fontSize': '30px'})
     logo = html.Img(
         #src=app.get_asset_url('dash-logo.png'),
 
@@ -15,6 +17,9 @@ def Header(name, app):
     link = html.A(logo, href="https://www.pom.ch/")
 
     return dbc.Row([dbc.Col(title, md=8), dbc.Col(link, md=4)])
+
+# Setze das Logging-Level
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
 # app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY])
@@ -67,7 +72,7 @@ content = html.Div(id="page-content", style=CONTENT_STYLE)
 
 app.layout = dbc.Container([
     dbc.Row([
-        Header("RIS - Data Quality Cockpit", app),
+        Header("RIS - Regulatory Information System", app)
         #dbc.Col(html.Div("Python Multipage App with Dash",
         #                 style={'fontSize':50, 'textAlign':'left'}))
     ]),
@@ -90,8 +95,5 @@ app.layout = dbc.Container([
 ], fluid=True)
 
 
-#if __name__ == "__main__":
-#    app.run(debug=False)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(debug=False)

@@ -96,4 +96,5 @@ app.layout = dbc.Container([
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    port = int(os.environ.get("PORT", 8050))  # Standardport auf 8050 setzen, falls keine PORT Umgebungsvariable gesetzt ist
+    app.run(host='0.0.0.0', port=port, debug=False)

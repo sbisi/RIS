@@ -4,7 +4,7 @@ import plotly.express as px
 from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, path='/', name='KPI DAM', title='Index',
+dash.register_page(__name__, path='/', name='Data Basis', title='Index',
                    image='pg1.png', description='Real Estate Platform')
 
 # Daten einlesen
@@ -24,7 +24,7 @@ for col in boolean_columns:
 
 # Verteilung nach Kantonen als Balkendiagramm
 canton_distribution = data['GDEKT'].value_counts()
-canton_distribution_fig = px.bar(canton_distribution, labels={'index': 'Kanton', 'value': 'Anzahl der Gemeinden'}, title='Verteilung der Gemeinden pro Kanton')
+canton_distribution_fig = px.bar(canton_distribution, labels={'index': 'Kanton', 'value': 'Anzahl der Gemeinden'}, color_discrete_sequence=['#636EFA'], title='Verteilung der Gemeinden pro Kanton')
 
 # KPI Tabelle erstellen
 kpi_data = []

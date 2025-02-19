@@ -31,4 +31,4 @@ geopandas
 geopy
 matplotlib
 shapely
-fiona
+gdal

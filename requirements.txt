@@ -28,4 +28,4 @@ dash-deck
 pydeck
 requests
 geopandas
-geophy
+geopy

@@ -31,3 +31,4 @@ geopandas
 geopy
 matplotlib
 shapely
+fiona

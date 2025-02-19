@@ -245,4 +245,4 @@ def toggle_sidebar(n_clicks):
 
 if __name__ == "__main__":
     app.config.suppress_callback_exceptions = True
-    app.run_server(host="0.0.0.0", port=10000, debug=True)
+    app.run_server(host="0.0.0.0", port=10000, debug=False)

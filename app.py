@@ -240,5 +240,8 @@ def toggle_sidebar(n_clicks):
         new_button_style
     )
 
+# if __name__ == "__main__":
+#    app.run_server(debug=False)
+
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(host="0.0.0.0", port=10000, debug=True)

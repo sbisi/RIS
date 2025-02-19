@@ -29,4 +29,3 @@ pydeck
 requests
 geopandas
 geopy
-components

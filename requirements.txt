@@ -27,3 +27,4 @@ tqdm
 dash-deck
 pydeck
 requests
+geopandas

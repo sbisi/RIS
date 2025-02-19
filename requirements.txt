@@ -30,3 +30,4 @@ requests
 geopandas
 geopy
 matplotlib
+shapely.geometry

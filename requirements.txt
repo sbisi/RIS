@@ -26,3 +26,4 @@ zipp==3.8.1
 tqdm
 dash-deck
 pydeck
+requests

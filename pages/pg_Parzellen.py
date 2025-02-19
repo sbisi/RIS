@@ -89,7 +89,7 @@ parcel_data_store = dcc.Store(id="parcel_data_store", data={})  # 🆕 Speichert
 
 layout = html.Div([
     dcc.Store(id="parcel_data_store", data={}),
-    
+    html.Div(id="parcel_area", style={"display": "none"}),
     html.Div(
         "Informationen Parzellen",
         style={'font-size': '16px', "margin-top": "10px", "margin-bottom": "10px", "margin-left": "15px"}
@@ -251,7 +251,7 @@ def update_tab_content(active_tab, parcel_data):
     Input("parcel_data_store", "data")
 )
 def update_parcel_area(parcel_data):
-    if parcel_data and "area" in parcel_data:
+    if parcel_data and parcel_data.get("area") is not None:
         return f"{parcel_data['area']:.2f} m²"
     return "Keine Parzelle ausgewählt."
 

@@ -11,6 +11,8 @@ import pandas as pd
 
 from dash import dcc
 from dash import html
+import geopandas as gpd
+from shapely.geometry import shape
 
 # mapbox_api_token = os.getenv("MAPBOX_ACCESS_TOKEN")
 mapbox_api_token = "pk.eyJ1IjoicGV0ZXJzdGF1YjYxIiwiYSI6ImNsYnhjenFyejE1d3Q0MG55NjBjZDJ6aWoifQ.xgY2YrkCbL2pq0CletAT5g"
@@ -61,9 +63,6 @@ print("FINALER CHECK !!:",geo_df[['name', 'LINKDOC_PRESENT']])
 INITIAL_VIEW_STATE = pdk.ViewState(
     latitude=46.7, longitude=8.1355, zoom=6, max_zoom=15, pitch=40.5, bearing=20.36
 )
-
-import geopandas as gpd
-from shapely.geometry import shape
 
 # Angenommen, deine Daten beinhalten eine Spalte 'geometry' mit GeoJSON-Strukturen
 if 'geometry' in geo_df.columns:

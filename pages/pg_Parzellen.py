@@ -33,18 +33,26 @@ def convert_coordinates(x, y, from_epsg="EPSG:4326", to_epsg="EPSG:2056"):
 
 
 def get_coordinates(address):
-    headers = {"User-Agent": "MeinProjekt (email@example.com)"}
-    geocoder_url = f"https://nominatim.openstreetmap.org/search?format=json&q={address}"
-    response = requests.get(geocoder_url, headers=headers)
-    if response.status_code != 200:
+    r = requests.get(
+        "https://api3.geo.admin.ch/rest/services/api/SearchServer",
+        params={"searchText": address, "type": "locations"},
+        timeout=10
+    )
+    r.raise_for_status()
+    data = r.json()
+
+    results = data.get("results", [])
+    if not results:
         return None
-    try:
-        geocode_data = response.json()
-    except requests.exceptions.JSONDecodeError:
+
+    # GeoAdmin liefert i.d.R. WGS84 (lat/lon) unter attrs, je nach result type
+    attrs = results[0].get("attrs", {})
+    lon = attrs.get("lon")
+    lat = attrs.get("lat")
+    if lon is None or lat is None:
         return None
-    if not geocode_data:
-        return None
-    return float(geocode_data[0]['lon']), float(geocode_data[0]['lat'])
+
+    return float(lon), float(lat)
 
 
 from shapely.geometry import shape, Polygon
